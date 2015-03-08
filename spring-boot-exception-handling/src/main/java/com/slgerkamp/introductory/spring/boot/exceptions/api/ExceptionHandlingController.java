@@ -1,5 +1,7 @@
 package com.slgerkamp.introductory.spring.boot.exceptions.api;
 
+import java.sql.SQLException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -54,6 +56,19 @@ public class ExceptionHandlingController {
 		throw new IllegalArgumentException();
 	}
 
+	/**
+	 * SQLExceptionについては例外を通知せず、
+	 * [databaseError]という文字列を
+	 * 正常にリクエストが終了したものとする
+	 * @return
+	 * @throws SQLException
+	 */
+	@RequestMapping("/databaseError")
+	String throwDatabaseException1() throws SQLException {
+		logger.info("Throw SQLException");
+		throw new SQLException();
+	}
+	
 	/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 	/* このController独自のエラーハンドリング
 	/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
@@ -65,6 +80,17 @@ public class ExceptionHandlingController {
 	@ExceptionHandler(IllegalArgumentException.class)
 	public void conflict(){
 		logger.error("Request raised a IllegalArgumentException");
+	}
+	
+	/**
+	 * SQLExceptionについては例外を通知しない
+	 * @param exception
+	 * @return
+	 */
+	@ExceptionHandler({ SQLException.class })
+	public String databaseError(Exception exception) {
+		logger.error("Request raised " + exception.getClass().getSimpleName());
+		return "databaseError";
 	}
 	
 }	
