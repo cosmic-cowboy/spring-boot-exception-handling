@@ -100,6 +100,21 @@ public class ExceptionHandlingControllerTest {
 		assertThat(response.getBody(), is("databaseError"));
 	}
 
+
+	@Test
+	public void 例外を通知する_追加権限を持たない場合() throws Exception {
+		// 操作
+		ResponseEntity<String> response = 
+				template.exchange(apiEndPoint+"add", HttpMethod.GET, null, String.class);
+		
+		// 確認
+		Map<String, String> propertyMap = getBodyProperties(response);
+		// ボディ
+		assertThat(propertyMap.get("message"), is("追加できません"));
+		// ステータスコード
+		assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
+	}
+
 	/**
 	 * レスポンスボディを取得
 	 * @param response

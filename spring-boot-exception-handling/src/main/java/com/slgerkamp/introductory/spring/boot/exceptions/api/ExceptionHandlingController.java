@@ -1,6 +1,9 @@
 package com.slgerkamp.introductory.spring.boot.exceptions.api;
 
+import java.io.IOException;
 import java.sql.SQLException;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.slgerkamp.introductory.spring.boot.exceptions.exception.AddErrorInformationException;
 import com.slgerkamp.introductory.spring.boot.exceptions.exception.OrderNotFoundException;
 
 @RestController
@@ -69,6 +73,12 @@ public class ExceptionHandlingController {
 		throw new SQLException();
 	}
 	
+	@RequestMapping("/add")
+	String throwAddErrorInformationException() throws SQLException {
+		logger.info("Throw AddErrorInformationException");
+		throw new AddErrorInformationException();
+	}
+
 	/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 	/* このController独自のエラーハンドリング
 	/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
@@ -91,6 +101,17 @@ public class ExceptionHandlingController {
 	public String databaseError(Exception exception) {
 		logger.error("Request raised " + exception.getClass().getSimpleName());
 		return "databaseError";
+	}
+	
+	/**
+	 * エラーを更新
+	 * @param e
+	 * @param response
+	 * @throws IOException
+	 */
+	@ExceptionHandler({ AddErrorInformationException.class })
+	public void handleAddErrorInformationException(AddErrorInformationException e, HttpServletResponse response) throws IOException {
+		response.sendError(HttpStatus.BAD_REQUEST.value(), "追加できません");
 	}
 	
 }	
