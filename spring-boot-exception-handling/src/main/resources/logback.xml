@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<include resource="org/springframework/boot/logging/logback/base.xml" />
+	
+	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<encoder>
+			<pattern>${FILE_LOG_PATTERN}</pattern>
+		</encoder>
+		<file>${LOG_FILE}.day</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- 毎日ローテーション -->
+			<fileNamePattern>${LOG_FILE}.day.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<!-- 30日分保存 -->
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+	</appender> 
+
+	<root level="INFO">
+		<appender-ref ref="FILE" />
+	</root>	
+
+</configuration>

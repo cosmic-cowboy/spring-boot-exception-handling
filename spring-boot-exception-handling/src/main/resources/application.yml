@@ -1,0 +1,5 @@
+# LOGGING
+logging:
+  file: /var/log/springboot/exception-handling
+  level: 
+    org.springframework.web: DEBUG
